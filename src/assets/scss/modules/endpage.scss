@@ -1,0 +1,44 @@
+.endpage {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  width: 40%;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+.endpage__title {
+  position: absolute;
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+
+  border: 0;
+
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+}
+
+.endpage__img {
+  width: 100%;
+  height: auto;
+  margin-bottom: 4%;
+}
+
+.endpage__content {
+  margin: 0;
+  font-size: 24px;
+  line-height: 35px;
+  letter-spacing: 0.15px;
+
+  &:nth-of-type(2) {
+    margin-bottom: 40px;
+  }
+}
+
+.endpage__score {
+  margin-left: 10px;
+}

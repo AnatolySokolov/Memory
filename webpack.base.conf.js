@@ -20,7 +20,9 @@ module.exports = {
     paths: PATHS
   },
   entry: {
-    startpage: `${PATHS.src}/startpage.js`
+    startpage: `${PATHS.src}/startpage.js`,
+    gamepage: `${PATHS.src}/gamepage.js`,
+    endpage: `${PATHS.src}/endpage.js`
   },
   output: {
     filename: `${PATHS.assets}js/[name].[hash].js`,

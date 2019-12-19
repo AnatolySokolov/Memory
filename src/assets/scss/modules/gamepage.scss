@@ -1,0 +1,53 @@
+.gamepage {
+  width: 90%;
+  margin: 0 auto;
+  margin-top: 3%;
+}
+
+.gamepage__container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 2%;
+}
+
+.gamepage__btn {
+  padding: 0;
+
+  font-family: $mainFont;
+  letter-spacing: -0.25px;
+  color: white;
+  background-color: transparent;
+
+  border: none;
+  outline: none;
+  cursor: pointer;
+
+  &:focus,
+  &:hover {
+    color: red;
+  }
+}
+
+.gamepage__scores {
+  margin-left: 10px;
+}
+
+.gamepage__cards {
+  display: flex;
+  flex-flow: wrap;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.gamepage__wrapper {
+  width: 180px;
+  height: 250px;
+  margin-bottom: 10px;
+
+  border-radius: 15px;
+
+  perspective: 600px;
+}

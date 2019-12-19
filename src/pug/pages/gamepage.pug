@@ -1,0 +1,20 @@
+extends ../layout/main
+
+block variables
+  - const title = 'Memory';
+  - const description = 'card game'
+  - const keywords = 'card, game'
+  - const numberOfCards = 18
+
+block content
+  .gamepage
+    .gamepage__container
+      button.gamepage__btn(type= "button") Начать заново
+      p.gamepage__content Очки:
+        span.gamepage__scores 0
+    ul.gamepage__cards
+      - for (let i = 0; i < numberOfCards; i++)
+        li.gamepage__wrapper
+          .card.card--is-flipped
+            img.card__face.card__face--front(src="/assets/img/AH.png", alt="card", width=226, height=314)
+            img.card__face.card__face--back(src="/assets/img/shirt.jpg", alt="card", width=226, height=314)

@@ -1,0 +1,24 @@
+.startpage {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+
+  width: 40%;
+  margin: 0 auto;
+  margin-top: 15%;
+}
+
+.startpage__title {
+  margin-bottom: 7%;
+
+  font-size: 28px;
+  line-height: 38px;
+  text-transform: uppercase;
+}
+
+.startpage__img {
+  order: -1;
+  width: 100%;
+  height: auto;
+  margin-bottom: 3%;
+}

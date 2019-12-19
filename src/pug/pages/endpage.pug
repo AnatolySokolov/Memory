@@ -1,0 +1,15 @@
+extends ../layout/main
+
+block variables
+  - const title = 'Memory';
+  - const description = 'card game'
+  - const keywords = 'card, game'
+
+block content
+  .endpage
+    h2.endpage__title Результат
+    img.endpage__img(src='/assets/img/Group 2.png', alt='End Game', width=516, height=275)
+    p.endpage__content Поздравляем!
+    p.endpage__content Ваш итоговый счёт:
+      span.endpage__score 594
+    a.link(href='/gamepage.html') Ещё раз
