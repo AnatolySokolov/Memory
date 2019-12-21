@@ -13,7 +13,6 @@ export class Table {
     this.guessedCard = null;
     this.score = 0;
     this.output = document.querySelector('.gamepage__scores');
-    this.startAgainBtn = document.querySelector('.gamepage__btn');
   }
 
   getRandomInt(max) {
@@ -83,6 +82,10 @@ export class Table {
     });
   }
 
+  clearContainer() {
+    while (this.container.firstElementChild) this.container.firstElementChild.remove();
+  }
+
   onCardClick(e) {
     if (e.target.tagName !== 'IMG') return;
 
@@ -123,7 +126,15 @@ export class Table {
     this.render();
     setTimeout(() => {
       this.flipCards();
-      this.container.addEventListener('click', e => this.onCardClick(e));
     }, this.timeToRemember);
+  }
+
+  reset() {
+    this.hand = [];
+    this.guessedCard = null;
+    this.score = 0;
+    this.output.textContent = this.score;
+    this.clearContainer();
+    this.init();
   }
 }
