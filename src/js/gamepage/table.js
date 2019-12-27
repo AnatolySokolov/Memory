@@ -27,63 +27,81 @@ export class Table {
     });
   }
 
-  getHand() {
-    const hand = [];
+  createHand(hand, values, suits, limit) {
     let i = 0;
 
-    while (i < this.numberOfPairCards) {
-      const el = this.getRandomElFromArr(this.values) + this.getRandomElFromArr(this.suits);
+    while (i < limit) {
+      const el = this.getRandomElFromArr(values) + this.getRandomElFromArr(suits);
 
       if (hand.some(item => item === el)) continue;
       hand.push(el);
       i++;
     }
-
-    this.hand = hand;
   }
 
   double() {
     this.hand = this.hand.concat(this.hand);
   }
 
-  shuffle() {
-    for (let i = this.hand.length - 1; i > 0; i--) {
+  shuffle(hand) {
+    for (let i = hand.length - 1; i > 0; i--) {
       let j = this.getRandomInt(i);
 
-      [this.hand[i], this.hand[j]] = [this.hand[j], this.hand[i]];
+      [hand[i], hand[j]] = [hand[j], hand[i]];
     }
   }
 
-  render() {
-    this.container.innerHTML = this.hand.reduce((hand, value) => {
+  render(container, hand) {
+    container.innerHTML = hand.reduce((cards, value) => {
       const card = new Card(value);
 
-      return hand + card.render();
+      return cards + card.render();
     }, '');
   }
 
-  flipCards() {
-    const cards = document.querySelectorAll('.card');
-
-    cards.forEach(item => item.classList.toggle('card--is-flipped'));
+  flipCard(card) {
+    card.classList.toggle('card--is-flipped');
   }
 
-  hideAllCards() {
-    const cards = document.querySelectorAll('.card');
-
-    cards.forEach(item => item.classList.add('card--is-flipped'));
+  flipCards(arr) {
+    arr.forEach(item => item.classList.toggle('card--is-flipped'));
   }
 
-  deletePair(id) {
-    const cardsWrappers = document.querySelectorAll('.gamepage__wrapper');
+  hideAllCards(arr) {
+    arr.forEach(item => item.classList.add('card--is-flipped'));
+  }
 
-    cardsWrappers.forEach(item => {
+  deletePair(arr, id) {
+    arr.forEach(item => {
       if (item.dataset.id === id) item.firstElementChild.remove();
     });
   }
 
-  clearContainer() {
-    while (this.container.firstElementChild) this.container.firstElementChild.remove();
+  clearContainer(container) {
+    while (container.firstElementChild) container.firstElementChild.remove();
+  }
+
+  calculateScore(isGuessed, currentHand, numberOfPairCards) {
+    const ratio = 42;
+    const numberOfClosedPairs = currentHand.length / 2;
+    const numberOfOpenedPairs = numberOfPairCards - numberOfClosedPairs;
+    let score;
+
+    if (isGuessed) {
+      score = numberOfClosedPairs * ratio;
+      this.score += score;
+    } else {
+      score = numberOfOpenedPairs * ratio;
+      if (this.score - score < 0) {
+        this.score = 0;
+      } else {
+        this.score -= score;
+      }
+    }
+  }
+
+  showScore() {
+    this.output.textContent = this.score;
   }
 
   onCardClick(e) {
@@ -93,39 +111,41 @@ export class Table {
     const card = e.target.parentElement;
     const id = cardsWrapper.dataset.id;
     const cards = document.querySelectorAll('.card');
+    const cardWrappers = document.querySelectorAll('.gamepage__wrapper');
 
     if (this.guessedCard === null) {
       this.guessedCard = id;
-      card.classList.toggle('card--is-flipped');
+      this.flipCard(card);
     } else {
       if (this.guessedCard === id) {
-        card.classList.toggle('card--is-flipped');
-        this.score += (cards.length / 2) * 42;
-        this.output.textContent = this.score;
+        this.flipCard(card);
+        this.calculateScore(true, cards, this.numberOfPairCards);
+        this.showScore();
         setTimeout(() => {
-          this.deletePair(id);
+          this.deletePair(cardWrappers, id);
           this.guessedCard = null;
         }, 2000);
       } else {
-        card.classList.toggle('card--is-flipped');
+        this.flipCard(card);
         this.guessedCard = null;
-        this.score -= (9 - cards.length / 2) * 42;
-        if (this.score < 0) this.score = 0;
-        this.output.textContent = this.score;
+        this.calculateScore(false, cards, this.numberOfPairCards);
+        this.showScore();
         setTimeout(() => {
-          this.hideAllCards();
+          this.hideAllCards(cards);
         }, 2000);
       }
     }
   }
 
   init() {
-    this.getHand();
+    this.createHand(this.hand, this.values, this.suits, this.numberOfPairCards);
     this.double();
-    this.shuffle();
-    this.render();
+    this.shuffle(this.hand);
+    this.render(this.container, this.hand);
     setTimeout(() => {
-      this.flipCards();
+      const cards = document.querySelectorAll('.card');
+
+      this.flipCards(cards);
     }, this.timeToRemember);
   }
 
@@ -134,7 +154,7 @@ export class Table {
     this.guessedCard = null;
     this.score = 0;
     this.output.textContent = this.score;
-    this.clearContainer();
+    this.clearContainer(this.container);
     this.init();
   }
 }
