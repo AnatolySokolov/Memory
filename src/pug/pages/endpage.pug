@@ -24,4 +24,18 @@ block content
             span.results__score= item.score
       button.results__button-close(id='close-results' type='button') Закрыть
 
+    .request
+      p.request__content Вы попали в топ 10
+      form
+        .request__wrapper
+          label.request__label(for='name') Укажите Ваше имя
+          input.request__input(id='name' name='name' type='text' placeholder="Ваше имя")
+        input.request__submit(type='submit' value='Отправить')
+        button.request__close(id='close-request' type='button') Закрыть окно
+
+
+
+
+
+
 
