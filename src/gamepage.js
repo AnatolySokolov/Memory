@@ -4,7 +4,7 @@ import './assets/img';
 import { Table } from './js/gamepage/table';
 
 const options = {
-  timeToRemember: 2000,
+  timeToRemember: 5000,
   numberOfPairCards: 9
 };
 
@@ -15,4 +15,3 @@ const table = new Table(options);
 table.init();
 cards.addEventListener('click', e => table.onCardClick(e));
 startAgain.addEventListener('click', () => table.reset());
-

@@ -9,9 +9,9 @@ export class Table {
     this.values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'];
     this.suits = ['S', 'C', 'D', 'H'];
     this.hand = [];
-    this.container = document.querySelector('.gamepage__cards');
     this.guessedCard = null;
     this.score = 0;
+    this.container = document.querySelector('.gamepage__cards');
     this.output = document.querySelector('.gamepage__scores');
   }
 
@@ -31,7 +31,8 @@ export class Table {
     let i = 0;
 
     while (i < limit) {
-      const el = this.getRandomElFromArr(values) + this.getRandomElFromArr(suits);
+      const el =
+        this.getRandomElFromArr(values) + this.getRandomElFromArr(suits);
 
       if (hand.some(item => item === el)) continue;
       hand.push(el);
@@ -104,12 +105,20 @@ export class Table {
     this.output.textContent = this.score;
   }
 
+  saveScore(score) {
+    localStorage.setItem('score', JSON.stringify(score));
+  }
+
+  redirect() {
+    window.location.href = 'http://localhost:8081/endpage.html';
+  }
+
   onCardClick(e) {
     if (e.target.tagName !== 'IMG') return;
 
-    const cardsWrapper = e.target.closest('.gamepage__wrapper');
+    const cardWrapper = e.target.closest('.gamepage__wrapper');
     const card = e.target.parentElement;
-    const id = cardsWrapper.dataset.id;
+    const id = cardWrapper.dataset.id;
     const cards = document.querySelectorAll('.card');
     const cardWrappers = document.querySelectorAll('.gamepage__wrapper');
 
@@ -119,18 +128,22 @@ export class Table {
     } else {
       if (this.guessedCard === id) {
         this.flipCard(card);
-        this.calculateScore(true, cards, this.numberOfPairCards);
-        this.showScore();
         setTimeout(() => {
+          this.calculateScore(true, cards, this.numberOfPairCards);
+          this.showScore();
           this.deletePair(cardWrappers, id);
           this.guessedCard = null;
+          if (cards.length === 2) {
+            this.saveScore(this.score);
+            this.redirect();
+          }
         }, 2000);
       } else {
         this.flipCard(card);
         this.guessedCard = null;
-        this.calculateScore(false, cards, this.numberOfPairCards);
-        this.showScore();
         setTimeout(() => {
+          this.calculateScore(false, cards, this.numberOfPairCards);
+          this.showScore();
           this.hideAllCards(cards);
         }, 2000);
       }

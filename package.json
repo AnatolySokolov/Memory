@@ -5,7 +5,11 @@
   "main": "index.js",
   "scripts": {
     "dev": "webpack-dev-server --open --config webpack.dev.conf.js",
-    "build": "webpack --config webpack.build.conf.js"
+    "build": "rm -rf public && webpack --config webpack.build.conf.js",
+    "server": "nodemon server"
+  },
+  "engines": {
+    "node": ">=10.0.0"
   },
   "browserslist": [
     "> 1%",
@@ -27,6 +31,7 @@
     "image-webpack-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
     "node-sass": "^4.12.0",
+    "nodemon": "^2.0.2",
     "normalize-scss": "^7.0.1",
     "postcss-loader": "^3.0.0",
     "pug": "^2.0.4",
@@ -37,5 +42,9 @@
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0",
     "webpack-merge": "^4.2.1"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
   }
 }
