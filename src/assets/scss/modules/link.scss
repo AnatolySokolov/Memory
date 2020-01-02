@@ -3,12 +3,16 @@
 
   font-size: 16px;
   line-height: 22px;
+  font-family: $mainFont;
   text-decoration: none;
   color: $linkColor;
 
   background-color: $linkBGColor;
 
+  border: none;
   border-radius: 4px;
+
+  cursor: pointer;
 
   &:focus,
   &:hover {
