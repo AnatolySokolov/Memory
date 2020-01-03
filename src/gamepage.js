@@ -1,17 +1,18 @@
 import './assets/scss/main.scss';
 import './assets/img';
 
-import { Table } from './js/gamepage/table';
+import { Table } from './js/table';
 
 const options = {
   timeToRemember: 5000,
-  numberOfPairCards: 9
+  numberOfPairCards: 9,
+  ratio: 42
 };
 
-const startAgain = document.querySelector('.gamepage__btn');
-const cards = document.querySelector('.gamepage__cards');
+const startAgainButton = document.getElementById('start-again-btn');
+const cardList = document.getElementById('card-list');
 const table = new Table(options);
 
 table.init();
-cards.addEventListener('click', e => table.onCardClick(e));
-startAgain.addEventListener('click', () => table.reset());
+cardList.addEventListener('click', e => table.onCardClick(e));
+startAgainButton.addEventListener('click', () => table.reset());

@@ -1,18 +1,19 @@
 'use strict';
 
-import { Card } from './card';
+import { Card } from '../card';
 
 export class Table {
   constructor(options) {
     this.numberOfPairCards = options.numberOfPairCards;
     this.timeToRemember = options.timeToRemember;
+    this.ratio = options.ratio;
     this.values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'];
     this.suits = ['S', 'C', 'D', 'H'];
     this.hand = [];
     this.guessedCard = null;
     this.score = 0;
-    this.container = document.querySelector('.gamepage__cards');
-    this.output = document.querySelector('.gamepage__scores');
+    this.container = document.getElementById('card-list');
+    this.output = document.getElementById('score');
   }
 
   getRandomInt(max) {
@@ -72,9 +73,9 @@ export class Table {
     arr.forEach(item => item.classList.add('card--is-flipped'));
   }
 
-  deletePair(arr, id) {
-    arr.forEach(item => {
-      if (item.dataset.id === id) item.firstElementChild.remove();
+  deletePair(list, id) {
+    list.forEach(item => {
+      if (item.dataset.id === id) item.remove();
     });
   }
 
@@ -82,8 +83,7 @@ export class Table {
     while (container.firstElementChild) container.firstElementChild.remove();
   }
 
-  calculateScore(isGuessed, currentHand, numberOfPairCards) {
-    const ratio = 42;
+  calculateScore(isGuessed, currentHand, numberOfPairCards, ratio) {
     const numberOfClosedPairs = currentHand.length / 2;
     const numberOfOpenedPairs = numberOfPairCards - numberOfClosedPairs;
     let score;
@@ -110,17 +110,15 @@ export class Table {
   }
 
   redirect() {
-    window.location.href = 'http://localhost:8081/endpage.html';
+    window.location.href = '/endpage.html';
   }
 
   onCardClick(e) {
     if (e.target.tagName !== 'IMG') return;
 
-    const cardWrapper = e.target.closest('.gamepage__wrapper');
-    const card = e.target.parentElement;
-    const id = cardWrapper.dataset.id;
     const cards = document.querySelectorAll('.card');
-    const cardWrappers = document.querySelectorAll('.gamepage__wrapper');
+    const card = e.target.parentElement;
+    const id = card.dataset.id;
 
     if (this.guessedCard === null) {
       this.guessedCard = id;
@@ -129,9 +127,9 @@ export class Table {
       if (this.guessedCard === id) {
         this.flipCard(card);
         setTimeout(() => {
-          this.calculateScore(true, cards, this.numberOfPairCards);
+          this.calculateScore(true, cards, this.numberOfPairCards, this.ratio);
           this.showScore();
-          this.deletePair(cardWrappers, id);
+          this.deletePair(cards, id);
           this.guessedCard = null;
           if (cards.length === 2) {
             this.saveScore(this.score);
@@ -142,7 +140,7 @@ export class Table {
         this.flipCard(card);
         this.guessedCard = null;
         setTimeout(() => {
-          this.calculateScore(false, cards, this.numberOfPairCards);
+          this.calculateScore(false, cards, this.numberOfPairCards, this.ratio);
           this.showScore();
           this.hideAllCards(cards);
         }, 2000);

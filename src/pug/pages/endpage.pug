@@ -4,7 +4,6 @@ block variables
   - const title = 'Memory';
   - const description = 'card game'
   - const keywords = 'card, game'
-  - const results = [{name: 'ivan', score: 100}, {name: 'ivan', score: 100}, {name: 'ivan', score: 100}]
 
 block content
   .endpage
@@ -12,17 +11,13 @@ block content
     img.endpage__img(src='/assets/img/Group 2.png', alt='End Game', width=516, height=275)
     p.endpage__content Поздравляем!
     p.endpage__content Ваш итоговый счёт:
-      span.endpage__score= 0
+      span.endpage__score#score= 0
     a.link.endpage__link-again(href='/gamepage.html') Ещё раз
-    button.link(id='open-results' type='button') Посмотреть топ 10
+    button.link(id='open-results-btn' type='button') Посмотреть топ 10
 
-    .results
-      ul.results__list
-        each item in results
-          li.results__item
-            span.results__name= item.name
-            span.results__score= item.score
-      button.results__button-close(id='close-results' type='button') Закрыть
+    .results#results
+      ul.results__list#results-list
+      button.results__button-close(id='close-results-btn' type='button') Закрыть
 
     .request
       p.request__content Вы попали в топ 10

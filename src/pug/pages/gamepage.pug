@@ -4,12 +4,11 @@ block variables
   - const title = 'Memory';
   - const description = 'card game'
   - const keywords = 'card, game'
-  - const numberOfCards = 18
 
 block content
   .gamepage
     .gamepage__container
-      button.gamepage__btn(type= "button") Начать заново
+      button.gamepage__btn(id='start-again-btn' type= 'button') Начать заново
       p.gamepage__content Очки:
-        span.gamepage__scores 0
-    ul.gamepage__cards
+        span.gamepage__scores#score 0
+    ul.gamepage__cards#card-list
