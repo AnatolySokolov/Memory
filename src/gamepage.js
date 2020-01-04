@@ -1,5 +1,7 @@
-import './assets/scss/main.scss';
-import './assets/img';
+'use strict';
+
+import './assets/scss/gamepage.scss';
+import './assets/img/cards';
 
 import { Table } from './js/table';
 

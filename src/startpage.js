@@ -1,2 +1,4 @@
-import './assets/scss/main.scss';
-import './assets/img';
+'use strict';
+
+import './assets/scss/startpage.scss';
+import './assets/img/StartGame.png';

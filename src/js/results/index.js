@@ -6,9 +6,6 @@ const resultsContainer = document.getElementById('results-list');
 const openButton = document.getElementById('open-results-btn');
 const closeButton = document.getElementById('close-results-btn');
 
-
-console.log(openButton);
-
 const openResults = (container, className) => {
   container.classList.add(className);
 };

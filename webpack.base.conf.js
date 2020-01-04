@@ -20,12 +20,12 @@ module.exports = {
     paths: PATHS
   },
   entry: {
-    startpage: `${PATHS.src}/startpage.js`,
+    index: `${PATHS.src}/startpage.js`,
     gamepage: `${PATHS.src}/gamepage.js`,
     endpage: `${PATHS.src}/endpage.js`
   },
   output: {
-    filename: `${PATHS.assets}js/[name].[hash].js`,
+    filename: `${PATHS.assets}js/[name].[contenthash].js`,
     path: PATHS.dist,
     // для сборки на локальной машине закомментировать publicPath
     publicPath: '/'
@@ -33,7 +33,7 @@ module.exports = {
   optimization: {
     splitChunks: {
       cacheGroups: {
-        vendor: {
+        vendors: {
           name: 'vendors',
           test: /node_modules/,
           chunks: 'all',
@@ -52,8 +52,19 @@ module.exports = {
       {
         test: /\.css$/,
         use: [
+          'style-loader',
           MiniCssExtractPlugin.loader,
-          'css-loader'
+          {
+            loader: 'css-loader',
+            options: { sourceMap: true }
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              sourceMap: true,
+              config: { path: './postcss.config.js' }
+            }
+          }
         ]
       },
       {
@@ -75,14 +86,14 @@ module.exports = {
           {
             loader: 'css-loader',
             options: {
-              sourceMap: true,
-              url: false
+              sourceMap: true
             }
           },
           {
             loader: 'postcss-loader',
             options: {
-              sourceMap: true
+              sourceMap: true,
+              config: { path: './postcss.config.js' }
             }
           },
           {
@@ -97,7 +108,7 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: `${PATHS.assets}css/[name].[hash].css`
+      filename: `${PATHS.assets}css/[name].[contenthash].css`
     }),
     new CopyWebpackPlugin([
       {

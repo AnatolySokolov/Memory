@@ -1,4 +1,7 @@
-import './assets/scss/main.scss';
-import './assets/img';
+'use strict';
+
+import './assets/scss/endpage.scss';
+import './assets/img/Group 2.png';
+
 import './js/score';
 import './js/results';
