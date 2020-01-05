@@ -28,5 +28,7 @@
 }
 
 .card__face--back {
+  border-radius: 7px;
+
   transform: rotateY(180deg);
 }
