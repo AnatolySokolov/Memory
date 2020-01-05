@@ -13,24 +13,3 @@ block content
     p.endpage__content Ваш итоговый счёт:
       span.endpage__score#score= 0
     a.link.endpage__link-again(href='/gamepage.html') Ещё раз
-    button.link(id='open-results-btn' type='button') Посмотреть топ 10
-
-    .results#results
-      ul.results__list#results-list
-      button.results__button-close(id='close-results-btn' type='button') Закрыть
-
-    .request
-      p.request__content Вы попали в топ 10
-      form
-        .request__wrapper
-          label.request__label(for='name') Укажите Ваше имя
-          input.request__input(id='name' name='name' type='text' placeholder="Ваше имя")
-        input.request__submit(type='submit' value='Отправить')
-        button.request__close(id='close-request' type='button') Закрыть окно
-
-
-
-
-
-
-
