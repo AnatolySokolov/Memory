@@ -10,7 +10,7 @@ export class Table {
     this.values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'];
     this.suits = ['S', 'C', 'D', 'H'];
     this.hand = [];
-    this.guessedCard = null;
+    this.firstCard = null;
     this.score = 0;
     this.container = document.getElementById('card-list');
     this.output = document.getElementById('score');
@@ -119,32 +119,44 @@ export class Table {
     const cards = document.querySelectorAll('.card');
     const card = e.target.parentElement;
     const id = card.dataset.id;
+    let isGuessed = false;
 
-    if (this.guessedCard === null) {
-      this.guessedCard = id;
-      this.flipCard(card);
-    } else {
-      if (this.guessedCard === id) {
-        this.flipCard(card);
-        setTimeout(() => {
-          this.calculateScore(true, cards, this.numberOfPairCards, this.ratio);
-          this.showScore();
-          this.deletePair(cards, id);
-          this.guessedCard = null;
-          if (cards.length === 2) {
-            this.saveScore(this.score);
-            this.redirect();
-          }
-        }, 2000);
-      } else {
-        this.flipCard(card);
-        this.guessedCard = null;
-        setTimeout(() => {
-          this.calculateScore(false, cards, this.numberOfPairCards, this.ratio);
-          this.showScore();
-          this.hideAllCards(cards);
-        }, 2000);
-      }
+    this.flipCard(card);
+
+    // first card
+    if (this.firstCard === null) {
+      this.firstCard = id;
+
+      return;
+    }
+
+    // pair has been guessed
+    if (this.firstCard === id) {
+      isGuessed = true;
+      setTimeout(() => {
+        this.deletePair(cards, id);
+        this.firstCard = null;
+      }, 2000);
+    }
+
+    // pair hasn`t been guessed
+    if (this.firstCard !== id) {
+      isGuessed = false;
+      this.firstCard = null;
+      setTimeout(() => this.hideAllCards(cards), 2000);
+    }
+
+    setTimeout(() => {
+      this.calculateScore(isGuessed, cards, this.numberOfPairCards, this.ratio);
+      this.showScore();
+    }, 2000);
+
+    // last guessed pair, end game
+    if (this.firstCard === id && cards.length === 2) {
+      setTimeout(() => {
+        this.saveScore(this.score);
+        this.redirect();
+      }, 3000);
     }
   }
 
@@ -162,7 +174,7 @@ export class Table {
 
   reset() {
     this.hand = [];
-    this.guessedCard = null;
+    this.firstCard = null;
     this.score = 0;
     this.output.textContent = this.score;
     this.clearContainer(this.container);
