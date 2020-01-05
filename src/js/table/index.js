@@ -65,17 +65,17 @@ export class Table {
     card.classList.toggle('card--is-flipped');
   }
 
-  flipCards(arr) {
-    arr.forEach(item => item.classList.toggle('card--is-flipped'));
+  flipCards(cards) {
+    cards.forEach(card => card.classList.toggle('card--is-flipped'));
   }
 
-  hideAllCards(arr) {
-    arr.forEach(item => item.classList.add('card--is-flipped'));
+  hideAllCards(cards) {
+    cards.forEach(card => card.classList.add('card--is-flipped'));
   }
 
-  deletePair(list, id) {
-    list.forEach(item => {
-      if (item.dataset.id === id) item.remove();
+  deletePair(cards, id) {
+    cards.forEach(card => {
+      if (card.dataset.id === id) card.remove();
     });
   }
 
