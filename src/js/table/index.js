@@ -1,5 +1,6 @@
 'use strict';
 
+import { getRandomInt, getRandomElFromArr } from '../lib';
 import { Card } from '../card';
 
 export class Table {
@@ -18,24 +19,12 @@ export class Table {
     this.eventListenerEnabled = true;
   }
 
-  getRandomInt(max) {
-    return Math.floor(Math.random() * (max + 1));
-  }
-
-  getRandomElFromArr(arr) {
-    const r = this.getRandomInt(arr.length - 1);
-
-    return arr.find((el, i) => {
-      if (i === r) return el;
-    });
-  }
-
   createHand(hand, values, suits, limit) {
     let i = 0;
 
     while (i < limit) {
       const el =
-        this.getRandomElFromArr(values) + this.getRandomElFromArr(suits);
+        getRandomElFromArr(values) + getRandomElFromArr(suits);
 
       if (hand.some(item => item === el)) continue;
       hand.push(el);
@@ -49,7 +38,7 @@ export class Table {
 
   shuffle(hand) {
     for (let i = hand.length - 1; i > 0; i--) {
-      let j = this.getRandomInt(i);
+      let j = getRandomInt(i);
 
       [hand[i], hand[j]] = [hand[j], hand[i]];
     }
