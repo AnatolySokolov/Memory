@@ -13,7 +13,8 @@ const PATHS = {
 const PAGES_DIR = `${PATHS.src}/pug/pages`;
 const PAGES = fs
   .readdirSync(PAGES_DIR)
-  .filter(filename => filename.endsWith('.pug'));
+  .filter(filename => filename.endsWith('.pug'))
+  .map(page => page.replace(/\.pug/, ''));
 
 module.exports = {
   externals: {
@@ -28,19 +29,7 @@ module.exports = {
     filename: `${PATHS.assets}js/[name].[contenthash].js`,
     path: PATHS.dist,
     // для сборки на локальной машине закомментировать publicPath
-    publicPath: '/'
-  },
-  optimization: {
-    splitChunks: {
-      cacheGroups: {
-        vendors: {
-          name: 'vendors',
-          test: /node_modules/,
-          chunks: 'all',
-          enforce: true
-        }
-      }
-    }
+    publicPath: '/',
   },
   module: {
     rules: [
@@ -123,8 +112,9 @@ module.exports = {
     ...PAGES.map(
       page =>
         new HtmlWebpackPlugin({
-          template: `${PAGES_DIR}/${page}`,
-          filename: `./${page.replace(/\.pug/, '.html')}`
+          template: `${PAGES_DIR}/${page}.pug`,
+          filename: `./${page}.html`,
+          chunks: [page]
         })
     )
   ]
