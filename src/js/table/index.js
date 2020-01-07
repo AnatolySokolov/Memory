@@ -149,6 +149,14 @@ export class Table {
       setTimeout(() => this.hideAllCards(cards), 2000);
     }
 
+    // last guessed pair, end game
+    if (this.firstCard === id && cards.length === 2) {
+      setTimeout(() => {
+        this.saveScore(this.score);
+        this.redirect();
+      }, 3000);
+    }
+
     this.eventListenerEnabled = false;
     this.firstCard = null;
     this.firstCardIndex = null;
@@ -157,14 +165,6 @@ export class Table {
       this.showScore();
       this.eventListenerEnabled = true;
     }, 2000);
-
-    // last guessed pair, end game
-    if (this.firstCard === id && cards.length === 2) {
-      setTimeout(() => {
-        this.saveScore(this.score);
-        this.redirect();
-      }, 3000);
-    }
   }
 
   init() {
