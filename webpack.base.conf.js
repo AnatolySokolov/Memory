@@ -68,6 +68,13 @@ module.exports = {
         }
       },
       {
+        test: /\.mp3/,
+        loader: 'file-loader',
+        options: {
+          name: '[name].[ext]'
+        }
+      },
+      {
         test: /\.scss$/,
         use: [
           'style-loader',
@@ -107,6 +114,10 @@ module.exports = {
       {
         from: `${PATHS.src}/static`,
         to: ''
+      },
+      {
+        from: `${PATHS.src}/assets/sounds`,
+        to: `${PATHS.assets}sounds`
       }
     ]),
     ...PAGES.map(

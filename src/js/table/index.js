@@ -2,6 +2,7 @@
 
 import { getRandomInt, getRandomElFromArr } from '../lib';
 import { Card } from '../card';
+import { gameSound } from '../sounds';
 
 export class Table {
   constructor(options) {
@@ -23,8 +24,7 @@ export class Table {
     let i = 0;
 
     while (i < limit) {
-      const el =
-        getRandomElFromArr(values) + getRandomElFromArr(suits);
+      const el = getRandomElFromArr(values) + getRandomElFromArr(suits);
 
       if (hand.some(item => item === el)) continue;
       hand.push(el);
@@ -117,6 +117,7 @@ export class Table {
     if (this.firstCardIndex === cardIndex || !this.eventListenerEnabled) return;
 
     this.flipCard(card);
+    gameSound.play('open');
 
     // first card
     if (this.firstCard === null) {
@@ -129,13 +130,19 @@ export class Table {
     // pair has been guessed
     if (this.firstCard === id) {
       isGuessed = true;
-      setTimeout(() => this.deletePair(cards, id), 2000);
+      setTimeout(() => {
+        this.deletePair(cards, id);
+        gameSound.play('plus');
+      }, 2000);
     }
 
     // pair hasn`t been guessed
     if (this.firstCard !== id) {
       isGuessed = false;
-      setTimeout(() => this.hideAllCards(cards), 2000);
+      setTimeout(() => {
+        this.hideAllCards(cards);
+        gameSound.play('minus');
+      }, 2000);
     }
 
     // last guessed pair, end game
