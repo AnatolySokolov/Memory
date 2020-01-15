@@ -1,7 +1,7 @@
 'use strict';
 
 import './assets/scss/endpage.scss';
-import './assets/img/Group 2.png';
+import './assets/img/Group.png';
 import { gameSound } from './js/sounds';
 
 const score = document.querySelector('.endpage__score');

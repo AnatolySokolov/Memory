@@ -1,4 +1,6 @@
 .startpage {
+  position: relative;
+
   display: flex;
   flex-flow: column;
   align-items: center;
@@ -21,4 +23,10 @@
   width: 100%;
   height: auto;
   margin-bottom: 3%;
+}
+
+.startpage__wrapper {
+  position: fixed;
+  right: 5%;
+  bottom: 5%;
 }
