@@ -1,6 +1,6 @@
 'use strict';
 
-import { getRandomInt, getRandomElFromArr } from '../lib';
+import { library } from '../library';
 import { Card } from '../card';
 import { gameSound } from '../sounds';
 
@@ -24,7 +24,7 @@ export class Table {
     let i = 0;
 
     while (i < limit) {
-      const el = getRandomElFromArr(values) + getRandomElFromArr(suits);
+      const el = library.getRandomElFromArr(values) + library.getRandomElFromArr(suits);
 
       if (hand.some(item => item === el)) continue;
       hand.push(el);
@@ -38,7 +38,7 @@ export class Table {
 
   shuffle(hand) {
     for (let i = hand.length - 1; i > 0; i--) {
-      let j = getRandomInt(i);
+      let j = library.getRandomInt(i);
 
       [hand[i], hand[j]] = [hand[j], hand[i]];
     }

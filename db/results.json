@@ -1,0 +1,42 @@
+[
+  {
+    "name": "aaa",
+    "score": 1000
+  },
+  {
+    "name": "bbb",
+    "score": 900
+  },
+  {
+    "name": "ccc",
+    "score": 800
+  },
+  {
+    "name": "ddd",
+    "score": 700
+  },
+  {
+    "name": "eee",
+    "score": 600
+  },
+  {
+    "name": "fff",
+    "score": 500
+  },
+  {
+    "name": "ggg",
+    "score": 400
+  },
+  {
+    "name": "hhh",
+    "score": 300
+  },
+  {
+    "name": "iii",
+    "score": 200
+  },
+  {
+    "name": "kkk",
+    "score": 100
+  }
+]

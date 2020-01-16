@@ -13,3 +13,8 @@ block content
     p.endpage__content Ваш итоговый счёт:
       span.endpage__score#score= 0
     a.link.endpage__link-again(href='/gamepage.html') Ещё раз
+    button.link(id='open-results-btn' type='button') Посмотреть топ 10
+
+    .results#results
+      ul.results__list#results-list
+      button.results__button-close(id='close-results-btn' type='button') Закрыть
