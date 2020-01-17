@@ -11,11 +11,12 @@ export class Results {
     this.closeButton = options.closeButton;
   }
 
-  createTemplateItem(result) {
+  createTemplateItem(result, index) {
     return `
       <li class="results__item">
-        <span class="results__name">${result.name}</span>
-        <span class="results__score">${result.score}</span>
+        <span class="results__content results__content--index">${index + 1}</span>
+        <span class="results__content results__content--name">${result.name}</span>
+        <span class="results__content results__content--score">${result.score}</span>
       </li>`;
   }
 
@@ -25,7 +26,7 @@ export class Results {
   }
 
   renderResults(results, container) {
-    container.innerHTML = results.reduce((list, item) => list + this.createTemplateItem(item), '');
+    container.innerHTML = results.reduce((list, item, i) => list + this.createTemplateItem(item, i), '');
   }
 
   onOpenButtonClick() {

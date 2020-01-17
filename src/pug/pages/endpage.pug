@@ -18,3 +18,12 @@ block content
     .results#results
       ul.results__list#results-list
       button.results__button-close(id='close-results-btn' type='button') Закрыть
+
+    .request#request
+      p.request__content Вы попали в топ 10
+      form#form(name= 'request')
+        .request__wrapper
+          label.request__label(for='name') Укажите Ваше имя
+          input.request__input(id='name' name='name' type='text' placeholder="Ваше имя")
+        input.request__submit(type='submit' value='Отправить')
+        button.request__close(id='close-request-btn' type='button') Закрыть окно

@@ -24,7 +24,22 @@
 
 .results__item {
   display: flex;
-  justify-content: space-between;
+}
+
+.results__content {
+  &--index {
+    margin-right: 10px;
+  }
+
+  &--name {
+    margin-right: auto;
+    margin-left: 0;
+  }
+
+  &--score {
+    margin-right: 0;
+    margin-left: auto;
+  }
 }
 
 .results__button-close {
