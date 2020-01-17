@@ -28,7 +28,6 @@ module.exports = {
   output: {
     filename: `${PATHS.assets}js/[name].[contenthash].js`,
     path: PATHS.dist,
-    // для сборки на локальной машине закомментировать publicPath
     publicPath: '/',
   },
   module: {

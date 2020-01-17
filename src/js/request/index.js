@@ -2,68 +2,53 @@
 
 import { library } from '../library';
 
-export class Request {
-  constructor(options) {
-    this.score = 0;
-    this.output = options.output;
-    this.storageName = options.storageName;
-    this.url = options.url;
-    this.closeButton = options.closeButton;
-    this.container = options.container;
-    this.form = options.form;
-  }
+const storageName = 'score',
+  form = document.forms.request,
+  container = document.getElementById('request'),
+  output = document.getElementById('score'),
+  closeButton = document.getElementById('close-request-btn'),
+  score = localStorage.getItem(storageName) || 0,
+  url = {
+    checkScore: 'checkScore',
+    playerData: 'playerData'
+  };
 
-  getScore(storageName) {
-    this.score = localStorage.getItem(storageName);
-  }
-
-  sendData(url, data) {
-    return fetch(url, {
-      method: 'post',
-      headers: {
-        'Content-type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    });
-  }
-
-  showScore(el, score) {
-    el.textContent = score;
-  }
-
-  removeStorage(storageName) {
+sendData(url.checkScore, { score: score })
+  .then(data => data.json())
+  .then(response => {
+    output.textContent = score;
     localStorage.removeItem(storageName);
-  }
+    if (response) library.openContainer(container, 'request--opened');
+  });
 
-  onCloseButtonClick() {
-    library.closeContainer(this.container, 'request--opened');
-  }
+form.addEventListener('submit', e => onFormSubmit(e));
+closeButton.addEventListener('click', onCloseButtonClick);
 
-  onFormSubmit(e) {
-    e.preventDefault();
+function sendData(url, data) {
+  return fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+}
 
-    const playerData = {
-      name: this.form.elements.name.value,
-      score: this.score
-    };
+function onCloseButtonClick() {
+  library.closeContainer(container, 'request--opened');
+}
 
-    this.sendData(this.url.score, playerData)
-      .then(() => {
-        this.onCloseButtonClick();
-        this.form.elements.name.value = '';
-      });
-  }
+function onFormSubmit(e) {
+  e.preventDefault();
 
-  init() {
-    this.getScore(this.storageName);
-    this.closeButton.addEventListener('click', () => this.onCloseButtonClick());
-    this.form.addEventListener('submit', e => this.onFormSubmit(e));
-    this.sendData(this.url.request, { score: this.score })
-      .then(data => data.json())
-      .then(response => {
-        this.showScore(this.output, this.score);
-        this.removeStorage(this.storageName);
-        if (response) library.openContainer(this.container, 'request--opened');
-      });
-  }
+  const playerData = {
+    name: form.elements.name.value,
+    score: score
+  };
+
+  sendData(url.playerData, playerData)
+    .then(() => {
+      onCloseButtonClick();
+      form.elements.name.value = '';
+    });
 }

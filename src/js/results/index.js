@@ -2,45 +2,39 @@
 
 import { library } from '../library';
 
-export class Results {
-  constructor(options) {
-    this.url = options.url;
-    this.mainContainer = options.mainContainer;
-    this.listContainer = options.listContainer;
-    this.openButton = options.openButton;
-    this.closeButton = options.closeButton;
-  }
+const url = 'results',
+  mainContainer = document.getElementById('results'),
+  listContainer = document.getElementById('results-list'),
+  openButton = document.getElementById('open-results-btn'),
+  closeButton = document.getElementById('close-results-btn');
 
-  createTemplateItem(result, index) {
-    return `
+openButton.addEventListener('click', onOpenButtonClick);
+closeButton.addEventListener('click', onCloseButtonClick);
+
+function createTemplateItem(result, index) {
+  return `
       <li class="results__item">
         <span class="results__content results__content--index">${index + 1}</span>
         <span class="results__content results__content--name">${result.name}</span>
         <span class="results__content results__content--score">${result.score}</span>
       </li>`;
-  }
+}
 
-  fetchResults(url) {
-    return fetch(url)
-      .then(data => data.json());
-  }
+function fetchResults(url) {
+  return fetch(url)
+    .then(data => data.json());
+}
 
-  renderResults(results, container) {
-    container.innerHTML = results.reduce((list, item, i) => list + this.createTemplateItem(item, i), '');
-  }
+function renderResults(results, container) {
+  container.innerHTML = results.reduce((list, item, i) => list + createTemplateItem(item, i), '');
+}
 
-  onOpenButtonClick() {
-    this.fetchResults(this.url)
-      .then(data => this.renderResults(data, this.listContainer))
-      .then(() => library.openContainer(this.mainContainer, 'results--opened'));
-  }
+function onOpenButtonClick() {
+  fetchResults(url)
+    .then(results => renderResults(results, listContainer))
+    .then(() => library.openContainer(mainContainer, 'results--opened'));
+}
 
-  onCloseButtonClick() {
-    library.closeContainer(this.mainContainer, 'results--opened');
-  }
-
-  enableListeners() {
-    this.openButton.addEventListener('click', () => this.onOpenButtonClick());
-    this.closeButton.addEventListener('click', () => this.onCloseButtonClick());
-  }
+function onCloseButtonClick() {
+  library.closeContainer(mainContainer, 'results--opened');
 }

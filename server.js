@@ -1,17 +1,11 @@
 const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
-
+const port = 3000;
 const app = express();
 
 app.use(express.static('./public'));
 app.use(bodyParser.json());
-
-function compareNumeric(a, b) {
-  if (a.score < b.score) return 1;
-  if (a.score === b.score) return 0;
-  if (a.score > b.score) return -1;
-}
 
 app.get('/results', (req, res) => {
   fs.readFile('./db/results.json', 'utf-8', (err, data) => {
@@ -20,7 +14,7 @@ app.get('/results', (req, res) => {
   });
 });
 
-app.post('/request', (req, res) => {
+app.post('/checkScore', (req, res) => {
   fs.readFile('./db/results.json', 'utf-8', (err, data) => {
     if (err) return console.log(err);
 
@@ -32,17 +26,24 @@ app.post('/request', (req, res) => {
   });
 });
 
-app.post('/score', (req, res) => {
+app.post('/playerData', (req, res) => {
   fs.readFile('./db/results.json', 'utf-8', (err, data) => {
     if (err) return console.log(err);
 
     const results = JSON.parse(data);
-    const item = {
+    const playerData = {
       name: req.body.name,
       score: +req.body.score
     };
 
-    results.push(item);
+    results.push(playerData);
+
+    function compareNumeric(a, b) {
+      if (a.score < b.score) return 1;
+      if (a.score === b.score) return 0;
+      if (a.score > b.score) return -1;
+    }
+
     results.sort(compareNumeric);
     if (results.length > 10) results.pop();
 
@@ -54,6 +55,4 @@ app.post('/score', (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log('Server has been started');
-});
+app.listen(port, () => console.log(`Server has been started on port ${port}`));
