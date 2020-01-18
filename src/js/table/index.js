@@ -1,188 +1,187 @@
 'use strict';
 
-import { getRandomInt, getRandomElFromArr } from '../lib';
-import { Card } from '../card';
+import { library } from '../library';
+import { Card } from './Card';
 import { gameSound } from '../sounds';
 
-export class Table {
-  constructor(options) {
-    this.numberOfPairCards = options.numberOfPairCards;
-    this.timeToRemember = options.timeToRemember;
-    this.ratio = options.ratio;
-    this.values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'];
-    this.suits = ['S', 'C', 'D', 'H'];
-    this.container = document.getElementById('card-list');
-    this.output = document.getElementById('score');
-    this.hand = [];
-    this.score = 0;
-    this.firstCard = null;
-    this.firstCardIndex = null;
-    this.eventListenerEnabled = true;
+const timeToRemember = 5000,
+  numberOfPairCards = 9,
+  ratio = 42,
+  container = document.getElementById('card-list'),
+  startAgainButton = document.getElementById('start-again-btn'),
+  output = document.getElementById('score'),
+  values = ['2', '3', '4', '5', '6', '7', '8', '9', '0', 'J', 'Q', 'K', 'A'],
+  suits = ['S', 'C', 'D', 'H'];
+
+let hand = [],
+  totalScore = 0,
+  firstCard = null,
+  firstCardIndex = null,
+  eventListenerEnabled = true;
+
+init();
+
+function createHand(hand, values, suits, limit) {
+  let i = 0;
+
+  while (i < limit) {
+    const el = library.getRandomElFromArr(values) + library.getRandomElFromArr(suits);
+
+    if (hand.some(item => item === el)) continue;
+    hand.push(el);
+    i++;
+  }
+}
+
+function double() {
+  hand = hand.concat(hand);
+}
+
+function shuffle(hand) {
+  for (let i = hand.length - 1; i > 0; i--) {
+    let j = library.getRandomInt(i);
+
+    [hand[i], hand[j]] = [hand[j], hand[i]];
+  }
+}
+
+function render(container, hand) {
+  container.innerHTML = hand.reduce((cards, value) => {
+    const card = new Card(value);
+
+    return cards + card.render();
+  }, '');
+}
+
+function flipCard(card) {
+  card.classList.toggle('card--is-flipped');
+}
+
+function hideAllCards(cards) {
+  cards.forEach(card => card.classList.add('card--is-flipped'));
+}
+
+function deletePair(cards, id) {
+  cards.forEach(card => {
+    if (card.dataset.id === id) card.remove();
+  });
+}
+
+function clearContainer(container) {
+  while (container.firstElementChild) container.firstElementChild.remove();
+}
+
+function calculateScore(isGuessed, currentHand, numberOfPairCards, ratio) {
+  const numberOfClosedPairs = currentHand.length / 2;
+  const numberOfOpenedPairs = numberOfPairCards - numberOfClosedPairs;
+  let score;
+
+  if (isGuessed) {
+    score = numberOfClosedPairs * ratio;
+    totalScore += score;
+
+    return;
   }
 
-  createHand(hand, values, suits, limit) {
-    let i = 0;
+  score = numberOfOpenedPairs * ratio;
 
-    while (i < limit) {
-      const el = getRandomElFromArr(values) + getRandomElFromArr(suits);
+  if (totalScore - score < 0) {
+    totalScore = 0;
 
-      if (hand.some(item => item === el)) continue;
-      hand.push(el);
-      i++;
-    }
+    return;
   }
 
-  double() {
-    this.hand = this.hand.concat(this.hand);
+  totalScore -= score;
+}
+
+function saveScore(score) {
+  localStorage.setItem('score', JSON.stringify(score));
+}
+
+function redirect() {
+  window.location.href = '/endpage.html';
+}
+
+function onCardClick(e) {
+  if (e.target.tagName !== 'IMG') return;
+
+  const cards = document.querySelectorAll('.card');
+  const card = e.target.parentElement;
+  const id = card.dataset.id;
+  const cardIndex = Array.from(cards).indexOf(card);
+  let isGuessed = false;
+
+  // click on the same card || multiple click
+  if (firstCardIndex === cardIndex || !eventListenerEnabled) return;
+
+  flipCard(card);
+  gameSound.play('open');
+
+  // first card
+  if (firstCard === null) {
+    firstCard = id;
+    firstCardIndex = cardIndex;
+
+    return;
   }
 
-  shuffle(hand) {
-    for (let i = hand.length - 1; i > 0; i--) {
-      let j = getRandomInt(i);
-
-      [hand[i], hand[j]] = [hand[j], hand[i]];
-    }
-  }
-
-  render(container, hand) {
-    container.innerHTML = hand.reduce((cards, value) => {
-      const card = new Card(value);
-
-      return cards + card.render();
-    }, '');
-  }
-
-  flipCard(card) {
-    card.classList.toggle('card--is-flipped');
-  }
-
-  flipCards(cards) {
-    cards.forEach(card => card.classList.toggle('card--is-flipped'));
-  }
-
-  hideAllCards(cards) {
-    cards.forEach(card => card.classList.add('card--is-flipped'));
-  }
-
-  deletePair(cards, id) {
-    cards.forEach(card => {
-      if (card.dataset.id === id) card.remove();
-    });
-  }
-
-  clearContainer(container) {
-    while (container.firstElementChild) container.firstElementChild.remove();
-  }
-
-  calculateScore(isGuessed, currentHand, numberOfPairCards, ratio) {
-    const numberOfClosedPairs = currentHand.length / 2;
-    const numberOfOpenedPairs = numberOfPairCards - numberOfClosedPairs;
-    let score;
-
-    if (isGuessed) {
-      score = numberOfClosedPairs * ratio;
-      this.score += score;
-    } else {
-      score = numberOfOpenedPairs * ratio;
-      if (this.score - score < 0) {
-        this.score = 0;
-      } else {
-        this.score -= score;
-      }
-    }
-  }
-
-  showScore() {
-    this.output.textContent = this.score;
-  }
-
-  saveScore(score) {
-    localStorage.setItem('score', JSON.stringify(score));
-  }
-
-  redirect() {
-    window.location.href = '/endpage.html';
-  }
-
-  onCardClick(e) {
-    if (e.target.tagName !== 'IMG') return;
-
-    const cards = document.querySelectorAll('.card');
-    const card = e.target.parentElement;
-    const id = card.dataset.id;
-    const cardIndex = Array.from(cards).indexOf(card);
-    let isGuessed = false;
-
-    // click on the same card || multiple click
-    if (this.firstCardIndex === cardIndex || !this.eventListenerEnabled) return;
-
-    this.flipCard(card);
-    gameSound.play('open');
-
-    // first card
-    if (this.firstCard === null) {
-      this.firstCard = id;
-      this.firstCardIndex = cardIndex;
-
-      return;
-    }
-
-    // pair has been guessed
-    if (this.firstCard === id) {
-      isGuessed = true;
-      setTimeout(() => {
-        this.deletePair(cards, id);
-        gameSound.play('plus');
-      }, 2000);
-    }
-
-    // pair hasn`t been guessed
-    if (this.firstCard !== id) {
-      isGuessed = false;
-      setTimeout(() => {
-        this.hideAllCards(cards);
-        gameSound.play('minus');
-      }, 2000);
-    }
-
-    // last guessed pair, end game
-    if (this.firstCard === id && cards.length === 2) {
-      setTimeout(() => {
-        this.saveScore(this.score);
-        this.redirect();
-      }, 3000);
-    }
-
-    this.eventListenerEnabled = false;
-    this.firstCard = null;
-    this.firstCardIndex = null;
-    this.calculateScore(isGuessed, cards, this.numberOfPairCards, this.ratio);
+  // pair has been guessed
+  if (firstCard === id) {
+    isGuessed = true;
     setTimeout(() => {
-      this.showScore();
-      this.eventListenerEnabled = true;
+      deletePair(cards, id);
+      gameSound.play('plus');
     }, 2000);
   }
 
-  init() {
-    this.createHand(this.hand, this.values, this.suits, this.numberOfPairCards);
-    this.double();
-    this.shuffle(this.hand);
-    this.render(this.container, this.hand);
-    this.eventListenerEnabled = false;
+  // pair hasn`t been guessed
+  if (firstCard !== id) {
+    isGuessed = false;
     setTimeout(() => {
-      const cards = document.querySelectorAll('.card');
-
-      this.hideAllCards(cards);
-      this.eventListenerEnabled = true;
-    }, this.timeToRemember);
+      hideAllCards(cards);
+      gameSound.play('minus');
+    }, 2000);
   }
 
-  reset() {
-    this.hand = [];
-    this.firstCard = null;
-    this.score = 0;
-    this.output.textContent = this.score;
-    this.clearContainer(this.container);
-    this.init();
+  // last guessed pair, end game
+  if (firstCard === id && cards.length === 2) {
+    setTimeout(() => {
+      saveScore(totalScore);
+      redirect();
+    }, 3000);
   }
+
+  eventListenerEnabled = false;
+  firstCard = null;
+  firstCardIndex = null;
+  calculateScore(isGuessed, cards, numberOfPairCards, ratio);
+  setTimeout(() => {
+    output.textContent = totalScore;
+    eventListenerEnabled = true;
+  }, 2000);
+}
+
+function init() {
+  createHand(hand, values, suits, numberOfPairCards);
+  double();
+  shuffle(hand);
+  render(container, hand);
+  eventListenerEnabled = false;
+  container.addEventListener('click', e => onCardClick(e));
+  startAgainButton.addEventListener('click', reset);
+  setTimeout(() => {
+    const cards = document.querySelectorAll('.card');
+
+    hideAllCards(cards);
+    eventListenerEnabled = true;
+  }, timeToRemember);
+}
+
+function reset() {
+  hand = [];
+  firstCard = null;
+  totalScore = 0;
+  output.textContent = totalScore;
+  clearContainer(container);
+  init();
 }
