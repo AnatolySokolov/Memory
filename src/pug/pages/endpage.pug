@@ -7,9 +7,9 @@ block variables
 
 block content
   .endpage
-    h2.endpage__title Результат
-    img.endpage__img(src='/assets/img/Group.png', alt='End Game', width=516, height=275)
-    p.endpage__content Поздравляем!
-    p.endpage__content Ваш итоговый счёт:
-      span.endpage__score#score= 0
-    a.link.endpage__link-again(href='/gamepage.html') Ещё раз
+    .endpage__container
+      img.endpage__img(src='/assets/img/Group.png', alt='End Game', width=516, height=275)
+      p.endpage__content Поздравляем!
+      p.endpage__content Ваш итоговый счёт:
+        span.endpage__score#score= 0
+      a.link.endpage__link-again(href='/gamepage.html') Ещё раз

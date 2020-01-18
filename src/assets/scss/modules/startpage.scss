@@ -8,10 +8,7 @@
   align-items: center;
   width: 320px;
   height: auto;
-  margin-top: 150px;
-  margin-left: 50%;
-
-  transform: translate(-50%);
+  margin: 150px auto 0 auto;
 }
 
 .startpage__title {
@@ -42,5 +39,11 @@
 @media (min-width: 1024px) {
   .startpage__container {
     margin-top: 200px;
+  }
+}
+
+@media (min-width: 1366px) {
+  .startpage__container {
+    margin-top: 100px;
   }
 }
